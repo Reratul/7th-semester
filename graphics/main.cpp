@@ -3,6 +3,101 @@
 float rocketX = -0.05f;
 float rocketY = 0.05f;
 bool isNight = false;
+bool flag = true, flag2 = true;
+bool value = false;
+
+
+void wall()
+{
+    glBegin(GL_QUADS);
+
+    // wall color
+    glColor3f(0.6f, 0.3f, 0.2f);
+
+    // left wall
+    glVertex2f(0.1f, 0.38f);
+    glVertex2f(0.31f, 0.38f);
+    glVertex2f(0.31f, 0.60f);
+    glVertex2f(0.1f, 0.60f);
+
+    //left 2nd wall
+
+
+    glVertex2f(0.15f, 0.32f);
+    glVertex2f(0.36f, 0.32f);
+    glVertex2f(0.36f, 0.50f);
+    glVertex2f(0.15f, 0.50f);
+
+    //right wall
+
+    glVertex2f(0.91f, 0.38f);
+    glVertex2f(0.71f, 0.38f);
+    glVertex2f(0.71f, 0.60f);
+    glVertex2f(0.91f, 0.60f);
+
+    //right 2nd wall
+
+     glVertex2f(0.86f, 0.32f);
+    glVertex2f(0.66f, 0.32f);
+    glVertex2f(0.66f, 0.50f);
+    glVertex2f(0.86f, 0.50f);
+
+    glEnd();
+}
+
+
+
+
+void flame()
+{
+	if (value)
+	{
+		if (flag == true){
+			glColor3f(1.0, 0.25, 0.0);
+			flag = false;
+		}
+		else{
+			glColor3f(1.0, 0.816, 0.0);
+			flag = true;
+		}
+	}
+	else
+	{
+		glColor3f(0.3, 1.2, 0.0);
+	}
+
+	float x = rocketX, y = rocketY;
+	glBegin(GL_POLYGON);
+	glVertex3f(x + 0.56, y + .35, 0.0);
+	glVertex3f(x + 0.54, y + .31, 0.0);
+	glVertex3f(x + 0.58, y + 0.28, 0.0);
+	glVertex3f(x + 0.61, y + 0.31, 0.0);
+	glVertex3f(x + 0.59, y + 0.35, 0.0);
+
+	if (value)
+	{
+		if (flag2 == true){
+			glColor3f(1.0, 0.816, 0.0);
+			flag2 = false;
+		}
+		else{
+			glColor3f(1.0, 0.25, 0.0);
+			flag2 = true;
+		}
+	}
+	else
+	{
+		glColor3f(0.3, 1.2, 0.0);
+	}
+
+	glVertex3f(x + 0.56, y + .35, 0.0);
+	glVertex3f(x + 0.54, y + .31, 0.0);
+	glVertex3f(x + 0.58, y + 0.28, 0.0);
+	glVertex3f(x + 0.61, y + 0.31, 0.0);
+	glVertex3f(x + 0.59, y + 0.35, 0.0);
+	glEnd();
+}
+
 
 void rocket(){
 	float x = rocketX;
@@ -55,12 +150,15 @@ void rocket(){
 
 	glEnd();
 
+	//flame in rocket
+	flame();
+
 
 }
 
 void sun()
 {
-    glColor3f(1.0f, 1.0f, 0.0f);
+    glColor3f(0.90, 0.30, 0.0);
 
     float x = 0.8f;
     float y = 0.8f;
@@ -79,6 +177,18 @@ void sun()
     }
 
     glEnd();
+    // sun rays
+    glColor3f(1.0, 0.60, 0.0);
+    glBegin(GL_LINES);
+    for(int i = 0; i < 12; i++)
+    {
+        float angle = 2.0f * 3.1416f * i / 12;
+        glVertex2f(x + cos(angle) * 0.09f, y + sin(angle) * 0.09f);
+        glVertex2f(x + cos(angle) * 0.14f, y + sin(angle) * 0.14f);
+    }
+
+
+    glEnd();
 }
 
 
@@ -93,6 +203,7 @@ void specialKey(int key, int x, int y){
     switch(key){
 
     case GLUT_KEY_UP:
+        value = true;
         rocketY += 0.05f;
         break;
     case GLUT_KEY_DOWN:
@@ -150,6 +261,7 @@ glClear(GL_COLOR_BUFFER_BIT);
 
     rocket();
     sun();
+    wall();
 
     glFlush();
 }
